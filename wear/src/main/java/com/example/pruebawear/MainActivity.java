@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,8 +24,8 @@ public class MainActivity extends Activity {
     private ActivityMainBinding binding;
     private Intent intent;
     private PendingIntent pendingIntent;
-
-    private NotificationCompat.Builder notofication;
+    private NotificationCompat.Builder notification;
+    private NotificationCompat.Builder notification2;
     private NotificationManagerCompat nm;
     private NotificationCompat.WearableExtender wearableExtender;
 
@@ -34,8 +35,7 @@ public class MainActivity extends Activity {
 
     private NotificationCompat.BigTextStyle bigTextStyle;
 
-    String longText = "with BigStyle, only a single line of text would be visible" +
-            "Any additional text would not appear directly in the notification";
+    String longText = "Mi notificacion";
 
 
     @Override
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 
                 pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 
-                notofication = new NotificationCompat.Builder(MainActivity.this, idChannel)
+                notification = new NotificationCompat.Builder(MainActivity.this, idChannel)
 
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Notification Wear")
@@ -77,9 +77,34 @@ public class MainActivity extends Activity {
                         .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                         .setStyle(bigTextStyle);
 
-                nm.notify(idNotification, notofication.build());
+                nm.notify(idNotification, notification.build());
+
+
+                notification2 = new NotificationCompat.Builder(MainActivity.this, idChannel)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Mi notificación")
+                        .setContentTitle("Notificación Wear")
+                        .setContentText("Mi notificación Wear")
+                        .extend(wearableExtender);
+
+
+                nm.notify(idNotification, notification.build());
+                nm.notify(idNotification, notification2.build());
+
+                new CountDownTimer(10000, 1000){
+
+                    public void onTick(long ms){}
+
+                    public void onFinish(){
+                        nm.notify(idNotification, notification2.build());
+                    }
+                }.start();
             }
 
         });
+
+
+
     }
-}
+
+        }
